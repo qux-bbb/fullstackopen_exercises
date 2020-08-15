@@ -12,17 +12,21 @@ const Button = (props) => (
 const P = (props) => <p>{props.text} {props.score}</p>
 
 const Statistics = ({good, neutral, bad}) => {
-  return (
-    <>
-      <Head text="statistics" />
-      <P text='good' score={good} />
-      <P text='neutral' score={neutral} />
-      <P text='bad' score={bad} />
-      <p>all {good+neutral+bad}</p>
-      <p>average {(good+neutral+bad)/3}</p>
-      <p>positive {good/(good+neutral+bad)*100} %</p>
-    </>
-  )
+  let sum = good + neutral + bad
+  if(sum===0)
+    return (<></>)
+  else
+    return (
+      <>
+        <Head text="statistics" />
+        <P text='good' score={good} />
+        <P text='neutral' score={neutral} />
+        <P text='bad' score={bad} />
+        <p>all {sum}</p>
+        <p>average {sum/3}</p>
+        <p>positive {good/sum*100} %</p>
+      </>
+    )
 }
 
 const App = () => {
