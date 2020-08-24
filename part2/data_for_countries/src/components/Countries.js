@@ -1,8 +1,26 @@
 import React from 'react'
+import {useState} from 'react'
 
 const Language = ({ language }) => <li>{language.name}</li>
 
-const Country = ({ country }) => <p>{country.name}</p>
+const Country = ({ country }) => {
+
+  const [showCountryDetail, setShowCountryDetail] = useState(false)
+
+  if (showCountryDetail)
+    return (
+      <>
+      <p>{country.name} <button onClick={() => setShowCountryDetail(false)}>hide</button></p>
+      <CountryDetail country={country} />
+      </>
+    )
+  else
+    return (
+      <>
+        <p>{country.name} <button onClick={() => setShowCountryDetail(true)}>show</button></p>
+      </>
+    )
+}
 
 const CountryDetail = ({ country }) => {
   return (
