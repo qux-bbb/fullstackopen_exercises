@@ -26,17 +26,29 @@ const App = () => {
     for (let index = 0; index < persons.length; index++) {
       if (newName === persons[index].name) {
         already_added = true
+        if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+          const personObject = {
+            name: newName,
+            number: newNumber
+          }
+          personService
+            .update(persons[index].id, personObject)
+            .then(returnedPerson => {
+              setPersons(persons.map(person => person.id !== persons[index].id ? person : returnedPerson))
+              setNewName('')
+              setNewNumber('')
+            })
+        }
         break
       }
     }
 
     if (already_added)
-      window.alert(`${newName} is already added to phonebook`)
+      console.log(`${newName} is already added to phonebook`)
     else {
       const personObject = {
         name: newName,
-        number: newNumber,
-        show: true
+        number: newNumber
       }
       personService
         .create(personObject)
