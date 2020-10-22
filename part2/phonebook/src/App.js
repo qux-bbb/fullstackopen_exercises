@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [theMessage, setTheMessage] = useState(null)
+  const [messageType, setMessageType] = useState('info')
 
   useEffect(() => {
     console.log('effect')
@@ -40,6 +41,14 @@ const App = () => {
               setNewName('')
               setNewNumber('')
               setTheMessage(`Updated ${newName}'s number`)
+              setMessageType('info')
+              setTimeout(() => {
+                setTheMessage(null)
+              }, 5000)
+            })
+            .catch(error => {
+              setTheMessage(`Information of ${newName} has already been removed from server`)
+              setMessageType('error')
               setTimeout(() => {
                 setTheMessage(null)
               }, 5000)
@@ -63,6 +72,7 @@ const App = () => {
           setNewName('')
           setNewNumber('')
           setTheMessage(`Added ${newName}`)
+          setMessageType('info')
           setTimeout(() => {
             setTheMessage(null)
           }, 5000)
@@ -92,6 +102,13 @@ const App = () => {
       .then(() => {
         setPersons(persons.filter(p => p.id !== person.id))
       })
+      .catch(error => {
+        setTheMessage(`Information of ${newName} has already been removed from server`)
+        setMessageType('error')
+        setTimeout(() => {
+          setTheMessage(null)
+        }, 5000)
+      })
     }
 
   }
@@ -101,7 +118,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={theMessage} />
+      <Notification message={theMessage} messageType={messageType} />
       <Filter filterValue={filterValue} handlefilterValueChange={handlefilterValueChange} />
       <h3>add a new</h3>
       <PersonForm
