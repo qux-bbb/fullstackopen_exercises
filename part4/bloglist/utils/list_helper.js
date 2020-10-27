@@ -36,26 +36,43 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   if (blogs.length === 0)
     return {}
-  let authorNums = _.countBy(blogs, 'author')
+  let countAuthors = _.countBy(blogs, 'author')
 
-  let maxNum = -1
-  let theAuthor = ''
-  for (author in authorNums) {
-    if (maxNum < authorNums[author]) {
-      maxNum = authorNums[author]
-      theAuthor = author
-    }
+  let authorCounts = []
+  for (author in countAuthors) {
+    authorCounts.push(
+      {
+        author: author,
+        blogs: countAuthors[author]
+      }
+    )
   }
 
-  return {
-    author: theAuthor,
-    blogs: authorNums[theAuthor]
+  return _.orderBy(authorCounts, 'blogs', 'desc')[0]
+}
+
+const mostLike = (blogs) => {
+  if (blogs.length === 0)
+    return {}
+  let groupBlogs = _.groupBy(blogs, 'author')
+
+  let authorLikes = []
+  for (author in groupBlogs) {
+    authorLikes.push(
+      {
+        author: author,
+        likes: totalLikes(groupBlogs[author])
+      }
+    )
   }
+
+  return _.orderBy(authorLikes, 'likes', 'desc')[0]
 }
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLike
 }
