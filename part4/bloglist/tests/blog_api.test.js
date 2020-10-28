@@ -28,7 +28,7 @@ test('the unique identifier property is named id', async () => {
   expect(blogsAtStart[0].id).toBeDefined()
 })
 
-test('a valid blog can be added ', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'How do I pass command line arguments to a Node.js program?',
     author: 'milkplus',
@@ -49,6 +49,17 @@ test('a valid blog can be added ', async () => {
   expect(titles).toContain(
     'How do I pass command line arguments to a Node.js program?'
   )
+})
+
+test('missing like attribute, default value set to 0', async () => {
+  const newBlog = {
+    title: 'How do I pass command line arguments to a Node.js program?',
+    author: 'milkplus',
+    url: 'https://stackoverflow.com/questions/4351521/how-do-i-pass-command-line-arguments-to-a-node-js-program',
+  }
+
+  const response = await api.post('/api/blogs').send(newBlog)
+  expect(response.body.likes).toBe(0)
 })
 
 afterAll(() => {
