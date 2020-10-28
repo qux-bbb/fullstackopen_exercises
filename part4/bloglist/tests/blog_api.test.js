@@ -30,7 +30,39 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
-describe('addition of a new note', () => {
+describe('viewing a specific blog', () => {
+
+  test('succeeds with a valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
+    const blogToView = blogsAtStart[0]
+
+    const resultBlog = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(resultBlog.body).toEqual(blogToView)
+  })
+
+  test('fails with statuscode 404 if blog does not exist', async () => {
+    const validNonexistingId = '233333333333333333333333'
+
+    await api
+      .get(`/api/blogs/${validNonexistingId}`)
+      .expect(404)
+  })
+
+  test('fails with statuscode 400 id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
+describe('addition of a new blog', () => {
   test('a valid blog can be added', async () => {
     const newBlog = {
       title: 'How do I pass command line arguments to a Node.js program?',
