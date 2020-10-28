@@ -62,6 +62,19 @@ test('missing like attribute, default value set to 0', async () => {
   expect(response.body.likes).toBe(0)
 })
 
+test('blog without title and url will return 400', async () => {
+  const newBlog = {
+    author: 'milkplus'
+  }
+
+  const respose = await api.post('/api/blogs').send(newBlog)
+  expect(respose.status).toBe(400)
+  expect(respose.body).toEqual(
+    {
+      error: 'Blog validation failed: url: Path `url` is required., title: Path `title` is required.'
+    })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
