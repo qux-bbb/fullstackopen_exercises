@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const helper = require('./test_helper')
 const app = require('../app')
 
@@ -10,13 +11,26 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('root_pass', 10)
+  const user = new User({ username: 'root', passwordHash, name: 'The Root' })
+  const savedUser = await user.save()
 
+  const userForToken = {
+    username: savedUser.username,
+    id: savedUser._id
+  }
+
+  const token = jwt.sign(userForToken, process.env.SECRET)
+  helper.authorizationValue = `bearer ${token}`
+
+  await Blog.deleteMany({})
   for (let blog of helper.initialBlogs) {
+    blog.user = savedUser._id
     let blogObject = new Blog(blog)
     await blogObject.save()
   }
-})
+}, 30000)
 
 describe('when there is initially some blogs saved', () => {
   test('there are six blogs', async () => {
@@ -44,6 +58,7 @@ describe('viewing a specific blog', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
+    blogToView.user = blogToView.user.toString()
     expect(resultBlog.body).toEqual(blogToView)
   })
 
@@ -75,6 +90,7 @@ describe('addition of a new blog', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', helper.authorizationValue)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -95,7 +111,10 @@ describe('addition of a new blog', () => {
       url: 'https://stackoverflow.com/questions/4351521/how-do-i-pass-command-line-arguments-to-a-node-js-program',
     }
   
-    const response = await api.post('/api/blogs').send(newBlog)
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', helper.authorizationValue)
+      .send(newBlog)
     expect(response.body.likes).toBe(0)
   })
   
@@ -104,8 +123,11 @@ describe('addition of a new blog', () => {
       author: 'milkplus'
     }
   
-    const respose = await api.post('/api/blogs').send(newBlog)
-    expect(respose.status).toBe(400)
+    const respose = await api
+      .post('/api/blogs')
+      .set('Authorization', helper.authorizationValue)
+      .send(newBlog)
+      .expect(400)
     expect(respose.body).toEqual(
       {
         error: 'Blog validation failed: url: Path `url` is required., title: Path `title` is required.'
@@ -120,6 +142,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', helper.authorizationValue)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -141,7 +164,8 @@ describe('update a blog', () => {
       title: blogsAtStart[1].title,
       author: blogsAtStart[1].author,
       url: blogsAtStart[1].url,
-      likes: blogsAtStart[1].likes+1
+      likes: blogsAtStart[1].likes+1,
+      user: blogsAtStart[1].user
     }
 
     const respose = await api.put(`/api/blogs/${blogsAtStart[1].id}`).send(blogToUpdate)
@@ -151,15 +175,6 @@ describe('update a blog', () => {
 })
 
 describe('when there is initially one user in db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash('root_pass', 10)
-    const user = new User({ username: 'root', passwordHash, name: 'The Root' })
-
-    await user.save()
-  })
-
   test('get all user', async () => {
     const response = await api.get('/api/users')
     const users = response.body
