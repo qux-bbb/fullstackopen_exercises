@@ -3,13 +3,13 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs')
   response.json(users)
 })
 
 usersRouter.post('/', async (request, response) => {
   const body = request.body
-
+  console.log(request)
   if (!(body.password && body.password.length>=3))
     return response.status(400).send({ error: 'the password is required and must be at least 3 characters long' })
 
