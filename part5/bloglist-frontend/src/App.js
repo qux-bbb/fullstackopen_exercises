@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
-import Togglable from "./components/Togglable"
-import BlogForm from "./components/BlogForm"
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const App = () => {
           setTheMessage(null)
         }, 5000)
       })
-      .catch(error => {
+      .catch(() => {
         setTheMessage('addBlog failed')
         setMessageType('error')
         setTimeout(() => {
@@ -59,7 +59,7 @@ const App = () => {
             blog.likes = returnedBlog.likes
           }
           newBlogs = newBlogs.concat(blog)
-        });
+        })
         setBlogs(newBlogs)
       })
       .catch(error => {
@@ -75,19 +75,19 @@ const App = () => {
   const deleteBlog = theBlog => {
     if (window.confirm(`Remove blog ${theBlog.title} by ${theBlog.author}?`)) {
       blogService
-      .deleteOne(theBlog.id)
-      .then(result => {
-        console.log(result)
-        setBlogs(blogs.filter(blog => blog.id!==theBlog.id))
-      })
-      .catch(error => {
-        console.log(error)
-        setTheMessage('deleteBlog failed')
-        setMessageType('error')
-        setTimeout(() => {
-          setTheMessage(null)
-        }, 5000)
-      })
+        .deleteOne(theBlog.id)
+        .then(result => {
+          console.log(result)
+          setBlogs(blogs.filter(blog => blog.id!==theBlog.id))
+        })
+        .catch(error => {
+          console.log(error)
+          setTheMessage('deleteBlog failed')
+          setMessageType('error')
+          setTimeout(() => {
+            setTheMessage(null)
+          }, 5000)
+        })
     }
   }
 
@@ -135,7 +135,7 @@ const App = () => {
             />
           </div>
           <div>
-            password 
+            password
             <input
               type="password"
               value={password}

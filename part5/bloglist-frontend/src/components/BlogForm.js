@@ -19,7 +19,7 @@ const BlogForm = ({ createBlog }) => {
 
   const addBlog = (event) => {
     event.preventDefault()
-    
+
     const blogObject = {
       title: newTitle,
       author: newAuthor,
@@ -48,7 +48,7 @@ const BlogForm = ({ createBlog }) => {
         </div>
         <button type="submit">create</button>
       </form>
-    </div>  
+    </div>
   )
 }
 
