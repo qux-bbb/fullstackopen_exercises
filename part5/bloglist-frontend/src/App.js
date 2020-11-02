@@ -72,6 +72,25 @@ const App = () => {
       })
   }
 
+  const deleteBlog = theBlog => {
+    if (window.confirm(`Remove blog ${theBlog.title} by ${theBlog.author}?`)) {
+      blogService
+      .deleteOne(theBlog.id)
+      .then(result => {
+        console.log(result)
+        setBlogs(blogs.filter(blog => blog.id!==theBlog.id))
+      })
+      .catch(error => {
+        console.log(error)
+        setTheMessage('deleteBlog failed')
+        setMessageType('error')
+        setTimeout(() => {
+          setTheMessage(null)
+        }, 5000)
+      })
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -142,7 +161,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
       )}
     </div>
   )

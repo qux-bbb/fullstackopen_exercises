@@ -1,13 +1,18 @@
 import React from 'react'
 import {useState} from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const removeButtonStyle = {
+    borderRadius: 5,
+    backgroundColor: '#0087F6'
   }
 
   const [showBlogDetail, setShowBlogDetail] = useState(false)
@@ -32,6 +37,7 @@ const Blog = ({ blog, updateBlog }) => {
         <div>{blog.url}</div>
         <div>likes {blog.likes} <button onClick={() => updateLikes()}>like</button></div>
         <div>{blog.user.username}</div>
+        <div><button style={removeButtonStyle} onClick={() => deleteBlog(blog)}>remove</button></div>
 
       </div>
     )

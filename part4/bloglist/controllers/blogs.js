@@ -60,14 +60,14 @@ blogsRouter.delete('/:id', async (request, response) => {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
     if (blog.user.toString() === decodedToken.id) {
-      Blog.findByIdAndRemove(request.params.id)
-      response.status(204).end()
+      await Blog.findByIdAndRemove(request.params.id)
+      return response.status(204).end()
     } else {
       return response.status(401).json({ error: 'Unauthorized' })
     }
   }
 
-  response.status(400).json({ error: 'can not find the blog' })
+  return response.status(400).json({ error: 'can not find the blog' })
 })
 
 module.exports = blogsRouter
