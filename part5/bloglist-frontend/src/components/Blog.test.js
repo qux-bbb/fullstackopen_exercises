@@ -54,3 +54,33 @@ test('show blog detail', () => {
     '11223344'
   )
 })
+
+test('click button twice', () => {
+  const blog = {
+    id: 'testId',
+    title: 'title1',
+    author: 'author1',
+    url: 'url1',
+    likes: 11223344,
+    user: {
+      id: 'userId',
+      username: 'root'
+    }
+  }
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} updateBlog={mockHandler} />
+  )
+
+  const viewButton = component.getByText('view')
+  fireEvent.click(viewButton)
+
+  component.debug()
+  const likeButton = component.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
