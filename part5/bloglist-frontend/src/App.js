@@ -49,6 +49,29 @@ const App = () => {
       })
   }
 
+  const updateBlog = (id, blogObject) => {
+    blogService
+      .update(id, blogObject)
+      .then(returnedBlog => {
+        let newBlogs = []
+        blogs.forEach(blog => {
+          if (blog.id === returnedBlog.id){
+            blog.likes = returnedBlog.likes
+          }
+          newBlogs = newBlogs.concat(blog)
+        });
+        setBlogs(newBlogs)
+      })
+      .catch(error => {
+        console.log(error)
+        setTheMessage('updateBlog failed')
+        setMessageType('error')
+        setTimeout(() => {
+          setTheMessage(null)
+        }, 5000)
+      })
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -117,7 +140,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       )}
     </div>
   )
