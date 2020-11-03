@@ -61,6 +61,29 @@ describe('Blog app', function() {
         cy.contains('like').click()
         cy.contains('likes 2')
       })
+
+      it('The user who created the blog can delete it', function() {
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.get('html').should('not.contain', 'title1 author1')
+      })
+
+      it('The user can not delete a blog he created', function() {
+        const user = {
+          name: 'test_name',
+          username: 'test_username',
+          password: 'test_password'
+        }
+        cy.request('POST', 'http://localhost:3003/api/users/', user)
+
+        cy.login({ username: 'test_username', password: 'test_password' })
+
+        cy.contains('view').click()
+        cy.contains('remove').click()
+
+        cy.contains('deleteBlog failed')
+        cy.contains('title1 author1')
+      })
     })
   })
 })
