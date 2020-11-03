@@ -85,5 +85,21 @@ describe('Blog app', function() {
         cy.contains('title1 author1')
       })
     })
+
+    describe('When three blogs is created', function() {
+      beforeEach(function() {
+        cy.createBlog({ title: 'title1', url: 'url1', author: 'author1', likes: 1 })
+        cy.createBlog({ title: 'title2', url: 'url2', author: 'author2', likes: 5 })
+        cy.createBlog({ title: 'title3', url: 'url3', author: 'author3', likes: 3 })
+      })
+      it('Blogs are sorted by likes, and blog with most likes at the top', function() {
+        cy.contains('view').click()
+        cy.contains('likes 5')
+        cy.contains('view').click()
+        cy.contains('likes 3')
+        cy.contains('view').click()
+        cy.contains('likes 1')
+      })
+    })
   })
 })
