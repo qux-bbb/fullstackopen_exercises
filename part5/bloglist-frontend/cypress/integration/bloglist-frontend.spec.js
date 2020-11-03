@@ -68,7 +68,7 @@ describe('Blog app', function() {
         cy.get('html').should('not.contain', 'title1 author1')
       })
 
-      it('The user can not delete a blog he created', function() {
+      it('The user cannot delete a blog that was not created by him', function() {
         const user = {
           name: 'test_name',
           username: 'test_username',
