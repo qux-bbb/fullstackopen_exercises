@@ -33,7 +33,7 @@ const Notification = ({ message, messageType }) => {
     )
   else // error message
     return (
-      <div style={errorStyle}>
+      <div  className='error' style={errorStyle}>
         {message}
       </div>
     )
