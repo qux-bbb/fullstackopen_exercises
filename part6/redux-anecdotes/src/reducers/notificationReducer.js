@@ -9,10 +9,19 @@ const notificationReducer = (state=notificationAtStart, action) => {
   }
 }
 
-export const notificationChange = (notification) => {
+const notificationChange = (notification) => {
   return {
     type: 'SET_NOTIFICATION',
     notification,
+  }
+}
+
+export const setNotification = (message, showTime) => {
+  return dispatch => {
+    dispatch(notificationChange(message))
+    setTimeout(() => {
+      dispatch(notificationChange(null))
+    }, showTime*1000)
   }
 }
 
