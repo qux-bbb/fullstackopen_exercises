@@ -16,11 +16,14 @@ const AnecdoteList = () => {
     }, 5000)
   }
 
-  anecdotes.sort((a, b) => b.votes - a.votes)
+  const filterValue = useSelector(state => state.filter).toLowerCase()
+  const filtedAnecdotes = anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filterValue))
+
+  filtedAnecdotes.sort((a, b) => b.votes - a.votes)
 
   return(
     <div>
-      {anecdotes.map(anecdote =>
+      {filtedAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
