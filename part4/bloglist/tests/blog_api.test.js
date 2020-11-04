@@ -104,6 +104,23 @@ describe('addition of a new blog', () => {
     )
   })
   
+  test('failed to add blog because token does not exist', async () => {
+    const newBlog = {
+      title: 'How do I pass command line arguments to a Node.js program?',
+      author: 'milkplus',
+      url: 'https://stackoverflow.com/questions/4351521/how-do-i-pass-command-line-arguments-to-a-node-js-program',
+      likes: 2506
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+
   test('missing like attribute, default value set to 0', async () => {
     const newBlog = {
       title: 'How do I pass command line arguments to a Node.js program?',
