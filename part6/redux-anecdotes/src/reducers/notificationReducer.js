@@ -1,4 +1,4 @@
-const notificationAtStart = 'notification at start'
+const notificationAtStart = null
 
 const notificationReducer = (state=notificationAtStart, action) => {
   switch (action.type) {
