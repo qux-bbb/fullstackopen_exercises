@@ -101,21 +101,26 @@ const CreateNew = (props) => {
     info.reset()
   }
 
+  const removeReset = (object) => {
+    const {reset, ...rest} = object
+    return rest
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' {...content} />
+          <input name='content' {...removeReset(content)} />
         </div>
         <div>
           author
-          <input name='author' {...author} />
+          <input name='author' {...removeReset(author)} />
         </div>
         <div>
           url for more info
-          <input name='info' {...info} />
+          <input name='info' {...removeReset(info)} />
         </div>
         <button type='submit'>create</button><button onClick={() => resetInput()}>reset</button>
       </form>
