@@ -1,5 +1,22 @@
 import React, { useState } from 'react'
-import { useRouteMatch, Switch, Route, Link } from 'react-router-dom'
+import { useHistory, useRouteMatch, Switch, Route, Link } from 'react-router-dom'
+
+const Notification = ({ notification }) => {
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+
+  if (notification)
+    return (
+      <div style={style}>
+        {notification}
+      </div>
+    )
+  else
+    return null
+}
 
 const Menu = () => {
   const padding = {
@@ -61,16 +78,20 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
-      content,
-      author,
-      info,
-      votes: 0
-    })
+    if ( content && author && info ) {
+      props.addNew({
+        content,
+        author,
+        info,
+        votes: 0
+      })
+      history.push('/')
+    }
   }
 
   return (
@@ -89,7 +110,7 @@ const CreateNew = (props) => {
           url for more info
           <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
       </form>
     </div>
   )
@@ -119,6 +140,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => {
+      setNotification('')
+    }, 10000)
   }
 
   const anecdoteById = (id) =>
@@ -144,6 +169,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Switch>
         <Route path='/anecdotes/:id'>
           <Anecdote anecdote={anecdote} />
