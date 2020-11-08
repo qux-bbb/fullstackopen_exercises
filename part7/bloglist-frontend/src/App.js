@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -6,13 +7,14 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { setNotification } from './reducers/notificationReducer'
+
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [theMessage, setTheMessage] = useState(null)
-  const [messageType, setMessageType] = useState('info')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -34,17 +36,21 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setTheMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
-        setMessageType('info')
+        dispatch(
+          setNotification(
+            `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+            'info'
+          )
+        )
+
         setTimeout(() => {
-          setTheMessage(null)
+          dispatch(setNotification(null, 'info'))
         }, 5000)
       })
       .catch(() => {
-        setTheMessage('addBlog failed')
-        setMessageType('error')
+        dispatch(setNotification('addBlog failed', 'error'))
         setTimeout(() => {
-          setTheMessage(null)
+          dispatch(setNotification(null, 'info'))
         }, 5000)
       })
   }
@@ -64,10 +70,9 @@ const App = () => {
       })
       .catch(error => {
         console.log(error)
-        setTheMessage('updateBlog failed')
-        setMessageType('error')
+        dispatch(setNotification('updateBlog failed', 'error'))
         setTimeout(() => {
-          setTheMessage(null)
+          dispatch(setNotification(null, 'info'))
         }, 5000)
       })
   }
@@ -82,10 +87,9 @@ const App = () => {
         })
         .catch(error => {
           console.log(error)
-          setTheMessage('deleteBlog failed')
-          setMessageType('error')
+          dispatch(setNotification('deleteBlog failed', 'error'))
           setTimeout(() => {
-            setTheMessage(null)
+            dispatch(setNotification(null, 'info'))
           }, 5000)
         })
     }
@@ -105,10 +109,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setTheMessage('wrong username or password')
-      setMessageType('error')
+      dispatch(setNotification('wrong username or password', 'error'))
       setTimeout(() => {
-        setTheMessage(null)
+        dispatch(setNotification(null, 'info'))
       }, 5000)
     }
   }
@@ -123,7 +126,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={theMessage} messageType={messageType} />
+        <Notification />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -156,7 +159,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={theMessage} messageType={messageType} />
+      <Notification />
       <p>{user.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Togglable buttonLabel="new blog">
         <BlogForm createBlog={createBlog} />
