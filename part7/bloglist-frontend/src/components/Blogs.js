@@ -38,6 +38,12 @@ export const Blog = ({ blog }) => {
       <a href={blog.url}>{blog.url}</a>
       <div>{blog.likes} likes <button onClick={() => updateLikes()}>like</button></div>
       <div>added by {blog.user.username}</div>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(comment => 
+          <li key={comment}>{comment}</li>
+        )}
+      </ul>
       <div><button style={removeButtonStyle} onClick={() => deleteOneBlog()}>remove</button></div>
     </div>
   )

@@ -73,4 +73,27 @@ blogsRouter.delete('/:id', async (request, response) => {
   return response.status(400).json({ error: 'can not find the blog' })
 })
 
+// api/blogs/:id/comments
+blogsRouter.get('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog.comments)
+  } else {
+    response.status(404).end()
+  }
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    blog.comments = blog.comments.concat(body)
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog.comments)
+  } else {
+    response.status(400).json({ error: 'can not find the blog' })
+  }
+  
+})
+
 module.exports = blogsRouter
