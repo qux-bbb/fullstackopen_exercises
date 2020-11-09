@@ -8,12 +8,12 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { currentUserChange } from './reducers/currentUserReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -23,10 +23,12 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(currentUserChange(user))
       blogService.setToken(user.token)
     }
   }, [])
+
+  const currentUser = useSelector(state => state.currentUser)
 
   const blogs = useSelector(state => state.blogs)
 
@@ -39,7 +41,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      setUser(user)
+      dispatch(currentUserChange(user))
       blogService.setToken(user.token)
       setUsername('')
       setPassword('')
@@ -54,10 +56,10 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+    dispatch(currentUserChange(null))
   }
 
-  if (user === null) {
+  if (currentUser === null) {
     return (
       <div>
         <h2>Log in to application</h2>
@@ -95,7 +97,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification />
-      <p>{user.username} logged in <button onClick={handleLogout}>logout</button></p>
+      <p>{currentUser.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Togglable buttonLabel="new blog">
         <BlogForm />
       </Togglable>
