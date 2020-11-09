@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
-import Blog from './components/Blog'
+import Blogs, { Blog } from './components/Blogs'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -42,6 +42,11 @@ const App = () => {
   const match = useRouteMatch('/users/:id')
   const user = match 
   ? users.find(user => user.id === match.params.id)
+  : null
+
+  const blogMatch = useRouteMatch('/blogs/:id')
+  const blog = blogMatch 
+  ? blogs.find(blog => blog.id === blogMatch.params.id)
   : null
 
   const handleLogin = async (event) => {
@@ -117,14 +122,14 @@ const App = () => {
         <Route path='/users'>
           <Users users={users} />
         </Route>
-        <Route path='/'>
+        <Route path='/blogs/:id'>
+          <Blog blog={blog} />
+        </Route>
+        <Route path='/'>  
           <Togglable buttonLabel="new blog">
             <BlogForm />
           </Togglable>
-
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
+          <Blogs blogs={blogs} />
         </Route>
 
       </Switch>
