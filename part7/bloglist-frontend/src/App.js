@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Switch, Route } from 'react-router-dom'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import Users from './components/Users'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { currentUserChange } from './reducers/currentUserReducer'
+import { initializeUsers } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -17,6 +20,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+  },[dispatch])
+
+  useEffect(() => {
+    dispatch(initializeUsers())
   },[dispatch])
 
   useEffect(() => {
@@ -98,13 +105,21 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <p>{currentUser.username} logged in <button onClick={handleLogout}>logout</button></p>
-      <Togglable buttonLabel="new blog">
-        <BlogForm />
-      </Togglable>
+      <Switch>
+        <Route path='/users'>
+          <Users />
+        </Route>
+        <Route path='/'>
+          <Togglable buttonLabel="new blog">
+            <BlogForm />
+          </Togglable>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+        </Route>
+
+      </Switch>
     </div>
   )
 }
