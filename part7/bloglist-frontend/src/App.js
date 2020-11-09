@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import Blogs, { Blog } from './components/Blogs'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -110,11 +110,24 @@ const App = () => {
 
   blogs.sort((a, b) => b.likes - a.likes)
 
+  const padding = {
+    padding: 5
+  }
+
+  const greyBg = {
+    background: 'lightgrey',
+    padding: 5
+  }
+
   return (
     <div>
+      <div style={greyBg}>
+        <Link style={padding} to='/blogs'>blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+        <b>{currentUser.username} logged in <button onClick={handleLogout}>logout</button></b>
+      </div>
       <h2>blogs</h2>
       <Notification />
-      <p>{currentUser.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Switch>
         <Route path='/users/:id'>
           <User user={user} />
