@@ -30,46 +30,6 @@ const App = () => {
 
   const blogs = useSelector(state => state.blogs)
 
-  const updateBlog = (id, blogObject) => {
-    blogService
-      .update(id, blogObject)
-      .then(returnedBlog => {
-        let newBlogs = []
-        blogs.forEach(blog => {
-          if (blog.id === returnedBlog.id){
-            blog.likes = returnedBlog.likes
-          }
-          newBlogs = newBlogs.concat(blog)
-        })
-        // setBlogs(newBlogs)
-      })
-      .catch(error => {
-        console.log(error)
-        dispatch(setNotification('updateBlog failed', 'error'))
-        setTimeout(() => {
-          dispatch(setNotification(null, 'info'))
-        }, 5000)
-      })
-  }
-
-  const deleteBlog = theBlog => {
-    if (window.confirm(`Remove blog ${theBlog.title} by ${theBlog.author}?`)) {
-      blogService
-        .deleteOne(theBlog.id)
-        .then(result => {
-          console.log(result)
-          // setBlogs(blogs.filter(blog => blog.id!==theBlog.id))
-        })
-        .catch(error => {
-          console.log(error)
-          dispatch(setNotification('deleteBlog failed', 'error'))
-          setTimeout(() => {
-            dispatch(setNotification(null, 'info'))
-          }, 5000)
-        })
-    }
-  }
-
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -141,7 +101,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} />
+        <Blog key={blog.id} blog={blog} />
       )}
     </div>
   )
