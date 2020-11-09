@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = () => {
+  const dispatch = useDispatch()
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -26,7 +30,16 @@ const BlogForm = ({ createBlog }) => {
       url: newUrl
     }
 
-    createBlog(blogObject)
+    dispatch(createBlog(blogObject))
+    dispatch(
+      setNotification(
+        `a new blog ${blogObject.title} by ${blogObject.author} added`,
+        'info'
+      )
+    )
+    setTimeout(() => {
+      dispatch(setNotification(null, 'info'))
+    }, 5000)
 
     // setNewTitle('')
     // setNewAuthor('')

@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
-  }, [])
+    dispatch(initializeBlogs())
+  },[dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -31,29 +28,7 @@ const App = () => {
     }
   }, [])
 
-  const createBlog = (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        dispatch(
-          setNotification(
-            `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-            'info'
-          )
-        )
-
-        setTimeout(() => {
-          dispatch(setNotification(null, 'info'))
-        }, 5000)
-      })
-      .catch(() => {
-        dispatch(setNotification('addBlog failed', 'error'))
-        setTimeout(() => {
-          dispatch(setNotification(null, 'info'))
-        }, 5000)
-      })
-  }
+  const blogs = useSelector(state => state.blogs)
 
   const updateBlog = (id, blogObject) => {
     blogService
@@ -66,7 +41,7 @@ const App = () => {
           }
           newBlogs = newBlogs.concat(blog)
         })
-        setBlogs(newBlogs)
+        // setBlogs(newBlogs)
       })
       .catch(error => {
         console.log(error)
@@ -83,7 +58,7 @@ const App = () => {
         .deleteOne(theBlog.id)
         .then(result => {
           console.log(result)
-          setBlogs(blogs.filter(blog => blog.id!==theBlog.id))
+          // setBlogs(blogs.filter(blog => blog.id!==theBlog.id))
         })
         .catch(error => {
           console.log(error)
@@ -162,7 +137,7 @@ const App = () => {
       <Notification />
       <p>{user.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Togglable buttonLabel="new blog">
-        <BlogForm createBlog={createBlog} />
+        <BlogForm />
       </Togglable>
 
       {blogs.map(blog =>
