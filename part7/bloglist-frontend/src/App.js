@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
-import Users from './components/Users'
+import Users, { User } from './components/Users'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationReducer'
@@ -36,8 +36,13 @@ const App = () => {
   }, [dispatch])
 
   const currentUser = useSelector(state => state.currentUser)
-
   const blogs = useSelector(state => state.blogs)
+  const users = useSelector(state => state.users)
+
+  const match = useRouteMatch('/users/:id')
+  const user = match 
+  ? users.find(user => user.id === match.params.id)
+  : null
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -106,8 +111,11 @@ const App = () => {
       <Notification />
       <p>{currentUser.username} logged in <button onClick={handleLogout}>logout</button></p>
       <Switch>
+        <Route path='/users/:id'>
+          <User user={user} />
+        </Route>
         <Route path='/users'>
-          <Users />
+          <Users users={users} />
         </Route>
         <Route path='/'>
           <Togglable buttonLabel="new blog">
