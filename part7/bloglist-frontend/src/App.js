@@ -26,7 +26,7 @@ const App = () => {
       dispatch(currentUserChange(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const currentUser = useSelector(state => state.currentUser)
 
