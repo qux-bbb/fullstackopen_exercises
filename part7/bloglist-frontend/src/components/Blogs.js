@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import CommentForm from './CommentForm'
 import { updateBlog, deleteBlog } from '../reducers/blogReducer'
 
 export const Blog = ({ blog }) => {
@@ -39,6 +40,7 @@ export const Blog = ({ blog }) => {
       <div>{blog.likes} likes <button onClick={() => updateLikes()}>like</button></div>
       <div>added by {blog.user.username}</div>
       <h3>comments</h3>
+      <CommentForm id={blog.id}/>
       <ul>
         {blog.comments.map(comment => 
           <li key={comment}>{comment}</li>
