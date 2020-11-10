@@ -11,7 +11,7 @@ mutation editAuthor($name: String!, $birthYearNumber: Int!) {
 }
 `
 
-const EditBirthYear = () => {
+const EditBirthYear = ({ authorNames }) => {
   const [name, setName] = useState('')
   const [birthYear, setBirthYear] = useState('')
 
@@ -34,10 +34,14 @@ const EditBirthYear = () => {
       <form onSubmit={submit}>
         <div>
           name
-          <input
+          <select
             value={name}
             onChange={({ target }) => setName(target.value)}
-          />
+          >
+            {authorNames.map(authorName => 
+              <option key={authorName}>{authorName}</option>
+            )}
+          </select>
         </div>
         <div>
           born
