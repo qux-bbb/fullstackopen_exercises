@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
 export const User = ({ user }) => {
   if (!user) {
@@ -9,18 +10,22 @@ export const User = ({ user }) => {
     <div>
       <h2>{user.username}</h2>
       <div><b>added blogs</b></div>
-      <ul>
-        {user.blogs.map(blog => 
-          <li key={blog.id}>{blog.title}</li>
-        )}
-      </ul>
+      <Table striped>
+        <tbody>
+          {user.blogs.map(blog =>
+            <tr key={blog.id}>
+              <td>{blog.title}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }
 
 const Users = ({ users }) => {
   return (
-    <table>
+    <Table striped>
       <thead>
         <tr>
           <th></th>
@@ -34,7 +39,7 @@ const Users = ({ users }) => {
           </tr>
         )}
       </tbody>
-    </table>
+    </Table>
   )
 }
 

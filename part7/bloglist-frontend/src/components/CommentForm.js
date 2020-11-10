@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 import { createComment } from '../reducers/blogReducer'
 
 const CommentForm = ({id}) => {
@@ -17,12 +18,16 @@ const CommentForm = ({id}) => {
   }
 
   return (
-    <div>
-      <form onSubmit={addComment}>
-      <input value={newComment} onChange={handleCommentChange} />
-        <button type="submit" value="Submit">add comment</button>
-      </form>
-    </div>
+    <Form onSubmit={addComment}>
+      <Form.Group>
+        <Form.Control
+          value={newComment} onChange={handleCommentChange}
+        />
+        <Button variant='primary'  type='submit'>
+          add comment
+        </Button>
+      </Form.Group>
+    </Form>
   )
 }
 

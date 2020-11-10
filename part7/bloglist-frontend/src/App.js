@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import { Form, Button, Navbar, Nav } from 'react-bootstrap'
 import Blogs, { Blog } from './components/Blogs'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -40,14 +41,14 @@ const App = () => {
   const users = useSelector(state => state.users)
 
   const match = useRouteMatch('/users/:id')
-  const user = match 
-  ? users.find(user => user.id === match.params.id)
-  : null
+  const user = match
+    ? users.find(user => user.id === match.params.id)
+    : null
 
   const blogMatch = useRouteMatch('/blogs/:id')
-  const blog = blogMatch 
-  ? blogs.find(blog => blog.id === blogMatch.params.id)
-  : null
+  const blog = blogMatch
+    ? blogs.find(blog => blog.id === blogMatch.params.id)
+    : null
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -78,54 +79,57 @@ const App = () => {
 
   if (currentUser === null) {
     return (
-      <div>
+      <div className='container'>
         <h2>Log in to application</h2>
         <Notification />
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
+        <Form onSubmit={handleLogin}>
+          <Form.Group>
+            <Form.Label>username:</Form.Label>
+            <Form.Control
               id='username'
               type="text"
               value={username}
               name="Username"
               onChange={({ target }) => setUsername(target.value)}
             />
-          </div>
-          <div>
-            password
-            <input
+            <Form.Label>password:</Form.Label>
+            <Form.Control
               id='password'
               type="password"
               value={password}
               name="Password"
               onChange={({ target }) => setPassword(target.value)}
             />
-          </div>
-          <button id='login-button' type="submit">login</button>
-        </form>
+          </Form.Group>
+          <Button variant='primary' id='login-button' type='submit'>
+            login
+          </Button>
+        </Form>
       </div>
     )
   }
 
   blogs.sort((a, b) => b.likes - a.likes)
 
-  const padding = {
-    padding: 5
-  }
-
-  const greyBg = {
-    background: 'lightgrey',
-    padding: 5
-  }
-
   return (
-    <div>
-      <div style={greyBg}>
-        <Link style={padding} to='/blogs'>blogs</Link>
-        <Link style={padding} to="/users">users</Link>
-        <b>{currentUser.username} logged in <button onClick={handleLogout}>logout</button></b>
-      </div>
+    <div className='container'>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="#" as="span">
+              <Link to='/blogs'>blogs</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link to="/users">users</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              {currentUser.username} logged in
+            </Nav.Link>
+            <Button onClick={handleLogout}>logout</Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
       <h2>blogs</h2>
       <Notification />
       <Switch>
@@ -138,7 +142,7 @@ const App = () => {
         <Route path='/blogs/:id'>
           <Blog blog={blog} />
         </Route>
-        <Route path='/'>  
+        <Route path='/'>
           <Togglable buttonLabel="new blog">
             <BlogForm />
           </Togglable>
