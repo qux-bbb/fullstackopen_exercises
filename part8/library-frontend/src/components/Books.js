@@ -48,7 +48,7 @@ const Books = (props) => {
               <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
-          )}
+          )} 
         </tbody>
       </table>
     </div>
