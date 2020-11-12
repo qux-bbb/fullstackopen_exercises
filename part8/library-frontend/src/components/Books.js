@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { gql, useQuery } from '@apollo/client'
 
 const ALL_BOOKS = gql`
@@ -10,12 +10,24 @@ query {
       born
     }
     published
+    genres
   }
 }
 `
 
+const CurrentGenre = ({ selectedGenre }) => {
+  if ( !selectedGenre ) {
+    return null
+  }
+
+  return (
+    <div>in genre <b>{selectedGenre}</b></div>
+  )
+}
+
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS, { pollInterval: 2000 })
+  const [selectedGenre, setSelectedGenre] = useState(null)
 
   if (!props.show) {
     return null
@@ -26,10 +38,24 @@ const Books = (props) => {
   }
 
   const books = result.data.allBooks
+  let allGenres = []
+  books.forEach(book => {
+    book.genres.forEach(genre => {
+      if (!allGenres.includes(genre))
+      allGenres = allGenres.concat(genre)
+    })
+  })
+  let filteredBooks = []
+  if (selectedGenre)
+    filteredBooks = books.filter(book => book.genres.includes(selectedGenre))
+  else
+    filteredBooks = books
 
   return (
     <div>
       <h2>books</h2>
+
+      <CurrentGenre selectedGenre={selectedGenre} />
 
       <table>
         <tbody>
@@ -42,7 +68,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
+          {filteredBooks.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -51,6 +77,12 @@ const Books = (props) => {
           )} 
         </tbody>
       </table>
+      <div>
+        {allGenres.map(genre => 
+          <button key={genre} onClick={() => setSelectedGenre(genre)}>{genre}</button>
+        )}
+        <button onClick={() => setSelectedGenre(null)}>all genres</button>
+      </div>
     </div>
   )
 }
