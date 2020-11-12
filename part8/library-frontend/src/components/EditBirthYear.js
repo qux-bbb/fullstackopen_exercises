@@ -22,7 +22,7 @@ const EditBirthYear = ({ authorNames }) => {
 
     const birthYearNumber = Number(birthYear)
     
-    editBirthYear({ variables: { name, birthYearNumber } })
+    editBirthYear({ variables: { name: name || authorNames[0], birthYearNumber } })
 
     setName('')
     setBirthYear('')
