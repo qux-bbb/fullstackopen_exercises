@@ -1,15 +1,6 @@
 import React, { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
-
-const EDIT_BIRTHYEAR = gql`
-mutation editAuthor($name: String!, $birthYearNumber: Int!) {
-  editAuthor(name: $name, setBornTo: $birthYearNumber)  {
-    name
-    born
-    bookCount
-  }
-}
-`
+import { useMutation } from '@apollo/client'
+import { EDIT_BIRTHYEAR } from '../queries'
 
 const EditBirthYear = ({ authorNames }) => {
   const [name, setName] = useState('')
