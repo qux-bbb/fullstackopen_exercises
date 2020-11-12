@@ -1,11 +1,24 @@
 
-import React from 'react'
-import { useQuery } from '@apollo/client'
+import React, { useState, useEffect } from 'react'
+import { useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS, ME } from '../queries'
 
 const Recommend = (props) => {
-  const result = useQuery(ALL_BOOKS, { pollInterval: 2000 })
-  const meResult = useQuery(ME)
+  const [favoriteGenre, setFavoriteGenre] = useState(null)
+  const [getAllBooks, result] = useLazyQuery(ALL_BOOKS)
+  const [getME, meResult] = useLazyQuery(ME)
+
+  useEffect(() => {
+    getME()
+    if (meResult.data) {
+      setFavoriteGenre(meResult.data.me.favoriteGenre)
+    }
+    
+  }, [meResult.data]) // eslint-disable-line
+
+  useEffect(() => {
+    getAllBooks({ variables: { genre: favoriteGenre } })
+  }, [result.data]) // eslint-disable-line
 
   if (!props.show) {
     return null
@@ -16,8 +29,6 @@ const Recommend = (props) => {
   }
 
   const books = result.data.allBooks
-  const favoriteGenre = meResult.data.me.favoriteGenre
-  const filteredBooks = books.filter(book => book.genres.includes(favoriteGenre))
 
   return (
     <div>
@@ -36,7 +47,7 @@ const Recommend = (props) => {
               published
             </th>
           </tr>
-          {filteredBooks.map(a =>
+          {books.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
