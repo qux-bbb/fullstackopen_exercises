@@ -1,4 +1,4 @@
-type Result = { 
+interface Result { 
   periodLength: number,
   trainingDays: number,
   success: boolean,
