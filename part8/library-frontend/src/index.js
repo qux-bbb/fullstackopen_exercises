@@ -32,7 +32,7 @@ const splitLink = split(
     return (
       definition.kind === 'OperationDefinition' &&
       definition.operation === 'subscription'
-    );
+    )
   },
   wsLink,
   authLink.concat(httpLink),

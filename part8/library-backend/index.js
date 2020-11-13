@@ -122,8 +122,8 @@ const resolvers = {
       }
 
       let authorId = null
-      const author = await Author.find({name: args.author})
-      if (author.length === 0) {
+      const author = await Author.findOne({name: args.author})
+      if (!author) {
         const newAuthor = new Author({name: args.author})
         authorId = newAuthor._id
         try {
