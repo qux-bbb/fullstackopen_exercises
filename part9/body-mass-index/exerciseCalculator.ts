@@ -6,7 +6,7 @@ interface Result {
   ratingDescription: string;
   target: number;
   average: number;
-};
+}
 
 interface ArgValues {
   target: number;
@@ -19,13 +19,13 @@ const parseArguments2 = (args: Array<string>): ArgValues => {
   args.slice(2).forEach(arg => {
     if (isNaN(Number(arg)))
       throw new Error('Provided values were not numbers!');
-  })
+  });
 
   return {
     target: Number(args[2]),
     exerciseTimes: args.slice(3).map(arg => Number(arg))
-  }
-}
+  };
+};
 
 const calculateExercises = (target: number, exerciseTimes: Array<number>): Result => {
   const periodLength = exerciseTimes.length;
@@ -36,15 +36,15 @@ const calculateExercises = (target: number, exerciseTimes: Array<number>): Resul
   switch (true) {
     case average>3:
       rating = 3;
-      ratingDescription = 'good'
+      ratingDescription = 'good';
       break;
     case average>1.5:
       rating = 2;
-      ratingDescription = 'not too bad but could be better'
+      ratingDescription = 'not too bad but could be better';
       break;
     default:
       rating = 1;
-      ratingDescription = 'bad'
+      ratingDescription = 'bad';
       break;
   }
   let success = false;
@@ -58,7 +58,7 @@ const calculateExercises = (target: number, exerciseTimes: Array<number>): Resul
     ratingDescription,
     target,
     average
-  }
+  };
 };
 
 try {
