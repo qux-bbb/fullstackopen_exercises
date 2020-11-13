@@ -13,7 +13,7 @@ const CurrentGenre = ({ selectedGenre }) => {
 }
 
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS, { pollInterval: 2000 })
+  const result = useQuery(ALL_BOOKS)
   const [selectedGenre, setSelectedGenre] = useState(null)
 
   if (!props.show) {

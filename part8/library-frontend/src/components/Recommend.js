@@ -5,7 +5,7 @@ import { ALL_BOOKS, ME } from '../queries'
 
 const Recommend = (props) => {
   const [favoriteGenre, setFavoriteGenre] = useState(null)
-  const [getAllBooks, result] = useLazyQuery(ALL_BOOKS)
+  const [getAllBooks, result] = useLazyQuery(ALL_BOOKS, {pollInterval: 2000})
   const [getME, meResult] = useLazyQuery(ME)
 
   useEffect(() => {
