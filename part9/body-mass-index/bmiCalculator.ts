@@ -1,4 +1,4 @@
-const calculateBmi= (height: number, mass: number) => {
+const calculateBmi= (height: number, mass: number): string => {
   if (height === 0) throw new Error('height can not be 0')
   const hightByM = height / 100;
   const bmi = mass / (hightByM * hightByM);
