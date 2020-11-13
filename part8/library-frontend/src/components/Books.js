@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
@@ -13,7 +13,7 @@ const CurrentGenre = ({ selectedGenre }) => {
 }
 
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS)
+  const result = useQuery(ALL_BOOKS, {pollInterval: 2000})
   const [selectedGenre, setSelectedGenre] = useState(null)
 
   if (!props.show) {
