@@ -22,7 +22,7 @@ const addPatient = ( entry: NewPatientEntry ): Patient => {
     id: uuidv4(),
     ...entry
   };
-  patientData.concat(newPatientEntry);
+  patientData.push(newPatientEntry);
   return newPatientEntry;
 };
 
