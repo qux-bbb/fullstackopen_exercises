@@ -5,9 +5,9 @@ import { Patient, NonSensitivePatientEntry, NewPatientEntry } from '../types';
 import toNewPatientEntry from '../utils';
 
 const patientData: Patient [] = data.map(obj => {
-  const object = toNewPatientEntry(obj) as Patient
-  object.id = obj.id
-  return object
+  const object = toNewPatientEntry(obj) as Patient;
+  object.id = obj.id;
+  return object;
 });
 
 const getEntries = (): Array<Patient> => {

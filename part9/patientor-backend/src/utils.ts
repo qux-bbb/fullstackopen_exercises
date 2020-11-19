@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NewPatientEntry, Gender } from './types';
 
 const isString = (text: any): text is string => {
