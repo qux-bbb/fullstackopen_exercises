@@ -1,7 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import patientData from '../../data/patients.json'
+import data from '../../data/patients.json';
 import { Patient, NonSensitivePatientEntry, NewPatientEntry } from '../types';
+import toNewPatientEntry from '../utils';
+
+const patientData: Patient [] = data.map(obj => {
+  const object = toNewPatientEntry(obj) as Patient
+  object.id = obj.id
+  return object
+});
 
 const getEntries = (): Array<Patient> => {
   return patientData;
