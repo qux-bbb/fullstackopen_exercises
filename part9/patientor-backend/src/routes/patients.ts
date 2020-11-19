@@ -1,12 +1,12 @@
 import express from 'express';
-import patientService from "../services/patientService";
-import toNewPatientEntry from "../utils";
+import patientService from '../services/patientService';
+import toNewPatientEntry from '../utils';
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
   res.send(patientService.getNonSensitiveEntries());
-})
+});
 
 router.post('/', (req, res) => {
   try {
@@ -16,6 +16,6 @@ router.post('/', (req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
 
 export default router;
