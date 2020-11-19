@@ -34,6 +34,11 @@ const getPublicPatient = (id: string): PublicPatient | undefined => {
   return entry;
 };
 
+const getPatientInfo = (id: string): Patient | undefined => {
+  const entry = patientData.find(p => p.id === id);
+  return entry;
+};
+
 const addPatient = ( entry: NewPatientEntry ): Patient => {
   const newPatientEntry = {
     id: uuidv4(),
@@ -49,4 +54,5 @@ export default {
   getNonSensitiveEntries,
   addPatient,
   getPublicPatient,
+  getPatientInfo,
 };
