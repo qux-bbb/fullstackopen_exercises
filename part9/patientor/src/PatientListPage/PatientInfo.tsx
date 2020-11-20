@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
 import { Patient } from "../types";
-import { useStateValue } from "../state";
+import { updatePatient, useStateValue } from "../state";
 
 const PatientInfo = () => {
   const [{patients}, dispatch] = useStateValue();
@@ -16,7 +16,7 @@ const PatientInfo = () => {
           `${apiBaseUrl}/patients/${id}`
         );
 
-        dispatch({ type: "UPDATE_PATIENT", payload: patientInfo });
+        dispatch(updatePatient(patientInfo));
       } catch (e) {
         console.error(e);
       }
@@ -24,10 +24,10 @@ const PatientInfo = () => {
     fetchPatient();
   }, [dispatch, id]);
 
-  const patient:Patient|undefined = Object.values(patients).find(patient => patient.id === id)
+  const patient: Patient|undefined = Object.values(patients).find(patient => patient.id === id);
 
   if (!patient)
-    return null
+    return null;
   if (patient.gender === 'male')
     return (
       <div>
@@ -36,7 +36,7 @@ const PatientInfo = () => {
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
       </div>
-    )
+    );
   else if (patient.gender === 'female')
     return (
       <div>
@@ -45,7 +45,7 @@ const PatientInfo = () => {
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
       </div>
-    )
+    );
   else
     return (
       <div>
@@ -54,7 +54,7 @@ const PatientInfo = () => {
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
       </div>
-    )
+    );
 };
 
 export default PatientInfo;
