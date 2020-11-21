@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import data from '../../data/patients';
-import { Patient, NonSensitivePatientEntry, NewPatientEntry, PublicPatient } from '../types';
-import toNewPatientEntry from '../utils';
+import { Patient, NonSensitivePatientEntry, NewPatientEntry, PublicPatient, Entry, NewEntry } from '../types';
+import { toNewPatientEntry } from '../utils';
 
-const patientData: Patient [] = data.map(obj => {
+let patientData: Patient [] = data.map(obj => {
   const object = toNewPatientEntry(obj) as Patient;
   object.id = obj.id;
   return object;
@@ -48,6 +48,21 @@ const addPatient = ( entry: NewPatientEntry ): Patient => {
   return newPatientEntry;
 };
 
+const addEntry = ( patientId: string, entry: NewEntry ): Entry | undefined => {
+  const thePatient = patientData.find(patient => patient.id === patientId);
+  if (!thePatient)
+    return undefined;
+  const newEntry = {
+    id: uuidv4(),
+    ...entry
+  };
+  thePatient.entries.push(newEntry);
+  const updatedPatient = { ...thePatient, entries: [...thePatient.entries, newEntry] };
+
+  patientData = patientData.map(patient => patient.id === patientId? updatedPatient: patient);
+  return newEntry;
+};
+
 
 export default {
   getEntries,
@@ -55,4 +70,5 @@ export default {
   addPatient,
   getPublicPatient,
   getPatientInfo,
+  addEntry,
 };
