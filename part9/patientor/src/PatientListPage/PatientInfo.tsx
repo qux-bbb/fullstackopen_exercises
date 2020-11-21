@@ -3,29 +3,9 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
-import { Diagnosis, Entry, Patient } from "../types";
+import { Diagnosis, Patient } from "../types";
 import { setDiagnosisList, updatePatient, useStateValue } from "../state";
-
-const EntryInfo: React.FC<{ entry: Entry, diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
-  if (!entry.diagnosisCodes)
-    return (
-      <div>
-        <p>{entry.description}</p>
-      </div>
-    );
-
-  return (
-    <div>
-      <p>{entry.description}</p>
-      <ul>
-        {entry.diagnosisCodes.map(diagnosisCode => 
-          <li key={diagnosisCode}>{diagnosisCode}: {diagnoses.find(diagnose => diagnose.code === diagnosisCode)?.name}</li>
-        )}
-      </ul>
-    </div>
-  );
-
-};
+import { EntryInfo } from "./EntryInfo";
 
 const PatientInfo = () => {
   const [{patients, diagnoses}, dispatch] = useStateValue();
@@ -66,13 +46,13 @@ const PatientInfo = () => {
 
   if (!patient)
     return null;
-  let genderIcon: 'smile'|'male'|'female' = 'smile';
+  let genderIcon: 'smile'|'man'|'woman' = 'smile';
   switch (patient.gender) {
     case 'male':
-      genderIcon = 'male';
+      genderIcon = 'man';
       break;
     case 'female':
-      genderIcon = 'female';
+      genderIcon = 'woman';
       break;
     default:
       break;
