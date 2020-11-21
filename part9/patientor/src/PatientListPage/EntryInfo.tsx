@@ -8,7 +8,7 @@ const assertNever = (value: never): never => {
   );
 };
 
-const HospitalDetail: React.FC<{ entry: HospitalEntry, diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
+const HospitalDetail: React.FC<{ entry: HospitalEntry; diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
   if (!entry.diagnosisCodes)
     return (
       <Message>
@@ -36,9 +36,9 @@ const HospitalDetail: React.FC<{ entry: HospitalEntry, diagnoses: Diagnosis[] }>
       </Message.Content>
     </Message>
   );
-}
+};
 
-const OccupationalHealthcareDetail: React.FC<{ entry: OccupationalHealthcareEntry, diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
+const OccupationalHealthcareDetail: React.FC<{ entry: OccupationalHealthcareEntry; diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
   if (!entry.diagnosisCodes)
     return (
       <Message>
@@ -66,9 +66,9 @@ const OccupationalHealthcareDetail: React.FC<{ entry: OccupationalHealthcareEntr
       </Message.Content>
     </Message>
   );
-}
+};
 
-const HealthCheckDetail: React.FC<{ entry: HealthCheckEntry, diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
+const HealthCheckDetail: React.FC<{ entry: HealthCheckEntry; diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
   let iconColors: 'green'|'yellow'|'orange'|'red' = 'green';
   switch (entry.healthCheckRating) {
     case 0:
@@ -116,9 +116,9 @@ const HealthCheckDetail: React.FC<{ entry: HealthCheckEntry, diagnoses: Diagnosi
       </Message.Content>
     </Message>
   );
-}
+};
 
-export const EntryInfo: React.FC<{ entry: Entry, diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
+export const EntryInfo: React.FC<{ entry: Entry; diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
   switch (entry.type) {
     case "Hospital":
       return <HospitalDetail entry={entry} diagnoses={diagnoses} />;
