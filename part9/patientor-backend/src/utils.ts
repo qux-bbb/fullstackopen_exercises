@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatientEntry, Gender } from './types';
+import { NewPatientEntry, Gender, Entry } from './types';
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -12,6 +12,16 @@ const isDate = (date: string): boolean => {
 const isGender = (gender: any) : gender is Gender => {
   return Object.values(Gender).includes(gender);
 };
+
+const isEntries = (entries: any): entries is Entry[] => {
+  const allEntryType = ['Hospital', 'OccupationalHealthcare', 'HealthCheck'];
+  for (let index = 0; index < entries.length; index++) {
+    const entry = entries[index];
+    if (!allEntryType.includes(entry.type))
+      return false;
+  }
+  return true; 
+}
 
 const parseName = (name: any): string => {
   if (!name || !isString(name)) {
@@ -48,6 +58,13 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
+const parseEntries = (entries: any): Entry[] => {
+  if (!entries || !isEntries(entries)) {
+    throw new Error('Incorrect or missing entries: ' + entries);
+  }
+  return entries;
+}
+
 const toNewPatientEntry = (object: any): NewPatientEntry => {
   const newEntry: NewPatientEntry = {
     name: parseName(object.name),
@@ -55,7 +72,7 @@ const toNewPatientEntry = (object: any): NewPatientEntry => {
     ssn: parseSSN(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
-    entries: []
+    entries: parseEntries(object.entries),
   };
   
   return newEntry;
