@@ -3,31 +3,32 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
-import { Entry, Patient } from "../types";
-import { updatePatient, useStateValue } from "../state";
+import { Diagnosis, Entry, Patient } from "../types";
+import { setDiagnosisList, updatePatient, useStateValue } from "../state";
 
-const EntryInfo: React.FC<{ entry: Entry }> = ({ entry }) => {
-  if (entry.diagnosisCodes)
-    return (
-      <div>
-        <p>{entry.description}</p>
-        <ul>
-          {entry.diagnosisCodes.map(diagnosisCode => 
-            <li>{diagnosisCode}</li>
-          )}
-        </ul>
-      </div>
-    );
-  else
+const EntryInfo: React.FC<{ entry: Entry, diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
+  if (!entry.diagnosisCodes)
     return (
       <div>
         <p>{entry.description}</p>
       </div>
     );
+
+  return (
+    <div>
+      <p>{entry.description}</p>
+      <ul>
+        {entry.diagnosisCodes.map(diagnosisCode => 
+          <li key={diagnosisCode}>{diagnosisCode}: {diagnoses.find(diagnose => diagnose.code === diagnosisCode)?.name}</li>
+        )}
+      </ul>
+    </div>
+  );
+
 };
 
 const PatientInfo = () => {
-  const [{patients}, dispatch] = useStateValue();
+  const [{patients, diagnoses}, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
   React.useEffect(() => {
     const fetchPatient = async () => {
@@ -37,11 +38,28 @@ const PatientInfo = () => {
         );
 
         dispatch(updatePatient(patientInfo));
+
       } catch (e) {
         console.error(e);
       }
     };
     fetchPatient();
+  }, [dispatch, id]);
+
+  React.useEffect(() => {
+    const fetchDiagnosis = async () => {
+      try {
+        const { data: diagnoses } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+
+        dispatch(setDiagnosisList(diagnoses));
+
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchDiagnosis();
   }, [dispatch, id]);
 
   const patient: Patient|undefined = Object.values(patients).find(patient => patient.id === id);
@@ -67,7 +85,7 @@ const PatientInfo = () => {
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
         <h3>entries</h3>
-        {patient.entries.map(entry => <EntryInfo entry={entry} />)}
+        {patient.entries.map(entry => <EntryInfo key={entry.id} entry={entry} diagnoses={diagnoses} />)}
       </div>
     );
   else
