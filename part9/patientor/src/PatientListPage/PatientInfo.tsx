@@ -3,8 +3,28 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
-import { Patient } from "../types";
+import { Entry, Patient } from "../types";
 import { updatePatient, useStateValue } from "../state";
+
+const EntryInfo: React.FC<{ entry: Entry }> = ({ entry }) => {
+  if (entry.diagnosisCodes)
+    return (
+      <div>
+        <p>{entry.description}</p>
+        <ul>
+          {entry.diagnosisCodes.map(diagnosisCode => 
+            <li>{diagnosisCode}</li>
+          )}
+        </ul>
+      </div>
+    );
+  else
+    return (
+      <div>
+        <p>{entry.description}</p>
+      </div>
+    );
+};
 
 const PatientInfo = () => {
   const [{patients}, dispatch] = useStateValue();
@@ -28,29 +48,32 @@ const PatientInfo = () => {
 
   if (!patient)
     return null;
-  if (patient.gender === 'male')
+  let genderIcon: 'smile'|'male'|'female' = 'smile';
+  switch (patient.gender) {
+    case 'male':
+      genderIcon = 'male';
+      break;
+    case 'female':
+      genderIcon = 'female';
+      break;
+    default:
+      break;
+  }
+
+  if (patient.entries.length !== 0)
     return (
       <div>
-        <h2>{patient.name} <Icon name='male' /></h2>
-        <p>dateOfBirth: {patient.dateOfBirth}</p>
+        <h2>{patient.name} <Icon name={genderIcon} /></h2>
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
-      </div>
-    );
-  else if (patient.gender === 'female')
-    return (
-      <div>
-        <h2>{patient.name} <Icon name='female' /></h2>
-        <p>dateOfBirth: {patient.dateOfBirth}</p>
-        <p>ssn: {patient.ssn}</p>
-        <p>occupation: {patient.occupation}</p>
+        <h3>entries</h3>
+        {patient.entries.map(entry => <EntryInfo entry={entry} />)}
       </div>
     );
   else
     return (
       <div>
-        <h2>{patient.name} <Icon name='smile' /></h2>
-        <p>dateOfBirth: {patient.dateOfBirth}</p>
+        <h2>{patient.name} <Icon name={genderIcon} /></h2>
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
       </div>
