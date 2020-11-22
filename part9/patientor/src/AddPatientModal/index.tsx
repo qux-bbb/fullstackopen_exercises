@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
 import AddHospitalEntryForm, { HospitalEntryFormValues } from './AddHospitalEntryForm';
+import AddOccupationalHealthcareEntryForm, { OccupationalHealthcareEntryFormValues } from './AddOccupationalHealthcareEntryForm';
 import AddPatientForm, { PatientFormValues } from './AddPatientForm';
 
 interface Props {
@@ -33,6 +34,23 @@ export const AddHospitalEntryModal = ({ modalOpen, onClose, onSubmit, error }: H
     <Modal.Content>
       {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
       <AddHospitalEntryForm onSubmit={onSubmit} onCancel={onClose} />
+    </Modal.Content>
+  </Modal>
+);
+
+interface OccupationalHealthcareEntryFormProps {
+  modalOpen: boolean;
+  onClose: () => void;
+  onSubmit: (values: OccupationalHealthcareEntryFormValues) => void;
+  error?: string;
+}
+
+export const AddOccupationalHealthcareEntryModal = ({ modalOpen, onClose, onSubmit, error }: OccupationalHealthcareEntryFormProps) => (
+  <Modal open={modalOpen} onClose={onClose} centered={false} closeIcon>
+    <Modal.Header>Add a new OccupationalHealthcareEntry</Modal.Header>
+    <Modal.Content>
+      {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
+      <AddOccupationalHealthcareEntryForm onSubmit={onSubmit} onCancel={onClose} />
     </Modal.Content>
   </Modal>
 );
