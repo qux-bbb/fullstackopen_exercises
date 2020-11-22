@@ -57,7 +57,7 @@ const addEntry = ( patientId: string, entry: NewEntry ): Entry | undefined => {
     ...entry
   };
   thePatient.entries.push(newEntry);
-  const updatedPatient = { ...thePatient, entries: [...thePatient.entries, newEntry] };
+  const updatedPatient = { ...thePatient, entries: thePatient.entries };
 
   patientData = patientData.map(patient => patient.id === patientId? updatedPatient: patient);
   return newEntry;
