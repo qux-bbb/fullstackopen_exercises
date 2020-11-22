@@ -33,6 +33,7 @@ export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
+        const formatError = "Date format error";
         const errors: { [field: string]: string } = {};
         if (!values.description) {
           errors.description = requiredError;
@@ -40,15 +41,25 @@ export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
         if (!values.date) {
           errors.date = requiredError;
         }
+
+        if(values.date && !(Date.parse(values.date))) {
+          errors.date = formatError;
+        }
+
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
-        if (!values.discharge.date) {
-          errors.dischargeDate = requiredError;
-        }
-        if (!values.discharge.criteria) {
-          errors.dischargeCriteria = requiredError;
-        }
+        // if (!values.discharge.date) {
+        //   errors['discharge.date'] = requiredError;
+        // }
+
+        // if(values.discharge.date && !(Date.parse(values.discharge.date))) {
+        //   errors['discharge.date'] = formatError;
+        // }
+
+        // if (!values.discharge.criteria) {
+        //   errors['discharge.criteria'] = requiredError;
+        // }
         return errors;
       }}
     >
